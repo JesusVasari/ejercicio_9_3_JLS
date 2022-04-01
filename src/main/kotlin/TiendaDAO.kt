@@ -1,7 +1,7 @@
 import java.sql.Connection
 import java.sql.SQLException
 
-class UserDAO (private val c: Connection){
+class TiendaDAO (private val c: Connection){
 
     // En el companion object creamos todas las constantes.
     // Las constante definirán las plantillas de las sentencias que necesitamos para construir
@@ -15,12 +15,12 @@ class UserDAO (private val c: Connection){
         private const val TABLE = "TIENDAS"
         private const val TRUNCATE_TABLE_TIENDAS_SQL = "TRUNCATE TABLE TIENDAS"
         private const val CREATE_TABLE_TIENDAS_SQL =
-            "CREATE TABLE TIENDAS (id_tienda  number(3) NOT NULL ,nombre_tienda varchar(120) NOT NULL,dierccion_tienda varchar(220) NOT NULL,PRIMARY KEY (id))"
-        private const val INSERT_TIENDAS_SQL = "INSERT INTO USERS" + "  (nombre_tienda, direccion_tienda) VALUES " + " (?, ?, ?)"
-        private const val SELECT_TIENDAS_BY_ID = "select id,nombre_tienda,direccion_tienda from TIENDAS where id =?"
+            "CREATE TABLE TIENDAS (id_tienda  number(1) NOT NULL , nombre_tienda varchar(120) NOT NULL, dierccion_tienda varchar(220) NOT NULL,PRIMARY KEY (id_tienda))"
+        private const val INSERT_TIENDAS_SQL = "INSERT INTO USERS (id_tienda,nombre_tienda, direccion_tienda) VALUES  (?, ?, ?)"
+        private const val SELECT_TIENDAS_BY_ID = "select id_tienda,nombre_tienda,direccion_tienda from TIENDAS where id_tienda =?"
         private const val SELECT_ALL_TIENDAS = "select * from TIENDAS"
-        private const val DELETE_TIENDAS_SQL = "delete from TIENDAS where id = ?"
-        private const val UPDATE_TIENDAS_SQL = "update TIENDAS set nombre_tienda = ?,direccion_tienda= ? where id = ?"
+        private const val DELETE_TIENDAS_SQL = "delete from TIENDAS where  id_tienda= ?"
+        private const val UPDATE_TIENDAS_SQL = "update TIENDAS set nombre_tienda = ?,direccion_tienda= ? where id_tienda = ?"
     }
 
 
@@ -80,7 +80,7 @@ class UserDAO (private val c: Connection){
      *
      * @param user
      */
-    fun insert(user: MyUser) {
+    fun insert(user: Tienda) {
         println(INSERT_TIENDAS_SQL)
         // try-with-resource statement will auto close the connection.
         try {
@@ -88,6 +88,7 @@ class UserDAO (private val c: Connection){
                 st.setInt(1, user.id_tienda)
                 st.setString(2, user.nombre_tienda)
                 st.setString(3, user.direccion_tienda)
+
                 st.executeUpdate()
             }
             //Commit the change to the database
@@ -97,8 +98,8 @@ class UserDAO (private val c: Connection){
         }
     }
 
-    fun selectById(id: Int): MyUser? {
-        var user: MyUser? = null
+    fun selectById(id: Int): Tienda? {
+        var user: Tienda? = null
         // Step 1: Preparamos la Statement, asignado los valores a los indices
         //          en función de las ? que existen en la plantilla
         try {
@@ -115,7 +116,7 @@ class UserDAO (private val c: Connection){
                     val id = rs.getInt("id_tienda")
                     val name = rs.getString("nombre_tienda")
                     val email = rs.getString("direccion_tienda")
-                    user = MyUser(id, name, email)
+                    user = Tienda(id, name, email)
                 }
             }
 
@@ -125,10 +126,10 @@ class UserDAO (private val c: Connection){
         return user
     }
 
-    fun selectAll(): List<MyUser> {
+    fun selectAll(): List<Tienda> {
 
         // using try-with-resources to avoid closing resources (boiler plate code)
-        val users: MutableList<MyUser> = ArrayList()
+        val users: MutableList<Tienda> = ArrayList()
         // Step 1: Establishing a Connection
         try {
             c.prepareStatement(SELECT_ALL_TIENDAS).use { st ->
@@ -138,10 +139,10 @@ class UserDAO (private val c: Connection){
 
                 // Step 4: Process the ResultSet object.
                 while (rs.next()) {
-                    val id = rs.getInt("id")
+                    val id = rs.getInt("id_tienda")
                     val name = rs.getString("nombre_tienda")
                     val email = rs.getString("direccion_tienda")
-                    users.add(MyUser(id, name, email ))
+                    users.add(Tienda(id, name, email ))
                 }
             }
 
@@ -167,7 +168,7 @@ class UserDAO (private val c: Connection){
         return rowDeleted
     }
 
-    fun update(user: MyUser): Boolean {
+    fun update(user: Tienda): Boolean {
         var rowUpdated = false
 
         try {

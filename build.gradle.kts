@@ -14,6 +14,8 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("com.oracle.database.jdbc:ojdbc10:19.14.0.0")
+
 }
 
 tasks.test {

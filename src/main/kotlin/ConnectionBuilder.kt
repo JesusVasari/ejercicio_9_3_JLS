@@ -14,8 +14,9 @@ class ConnectionBuilder {
 
     init {
         try {
-            // Aqui construimos la conexión
+            // Aqui construimos la connexion
             connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword)
+
         } catch (e: SQLException) {
             // TODO Auto-generated catch block
             e.printStackTrace()
