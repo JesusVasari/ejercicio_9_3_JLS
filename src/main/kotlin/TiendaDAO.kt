@@ -12,15 +12,15 @@ class TiendaDAO (private val c: Connection){
     // dependiendo del tiempo de dato que corresponda.
     companion object {
         private const val SCHEMA = "default"
-        private const val TABLE = "TIENDAS"
-        private const val TRUNCATE_TABLE_TIENDAS_SQL = "TRUNCATE TABLE TIENDAS"
-        private const val CREATE_TABLE_TIENDAS_SQL =
-            "CREATE TABLE TIENDAS (id_tienda  number(1) NOT NULL , nombre_tienda varchar(120) NOT NULL, dierccion_tienda varchar(220) NOT NULL,PRIMARY KEY (id_tienda))"
-        private const val INSERT_TIENDAS_SQL = "INSERT INTO USERS (id_tienda,nombre_tienda, direccion_tienda) VALUES  (?, ?, ?)"
-        private const val SELECT_TIENDAS_BY_ID = "select id_tienda,nombre_tienda,direccion_tienda from TIENDAS where id_tienda =?"
-        private const val SELECT_ALL_TIENDAS = "select * from TIENDAS"
-        private const val DELETE_TIENDAS_SQL = "delete from TIENDAS where  id_tienda= ?"
-        private const val UPDATE_TIENDAS_SQL = "update TIENDAS set nombre_tienda = ?,direccion_tienda= ? where id_tienda = ?"
+        private const val TABLE = "TIENDA"
+        private const val TRUNCATE_TABLE_TIENDA_SQL = "TRUNCATE TABLE TIENDA"
+        private const val CREATE_TABLE_TIENDA_SQL =
+            "CREATE TABLE TIENDA (id  number(1) NOT NULL , nombre varchar(120) NOT NULL, direccion varchar(220) NOT NULL,PRIMARY KEY (id))"
+        private const val INSERT_TIENDA_SQL = "INSERT INTO TIENDA (id,nombre, direccion) VALUES  (?, ?, ?)"
+        private const val SELECT_TIENDA_BY_ID = "select id,nombre,direccion from TIENDA where id =?"
+        private const val SELECT_ALL_TIENDA = "select * from TIENDA"
+        private const val DELETE_TIENDA_SQL = "delete from TIENDA where  id= ?"
+        private const val UPDATE_TIENDA_SQL = "update TIENDA set nombre = ? ,direccion= ? where id = ?"
     }
 
 
@@ -35,11 +35,11 @@ class TiendaDAO (private val c: Connection){
     }
 
     private fun truncateTable() {
-        println(TRUNCATE_TABLE_TIENDAS_SQL)
+        println(TRUNCATE_TABLE_TIENDA_SQL)
         // try-with-resource statement will auto close the connection.
         try {
             c.createStatement().use { st ->
-                st.execute(TRUNCATE_TABLE_TIENDAS_SQL)
+                st.execute(TRUNCATE_TABLE_TIENDA_SQL)
             }
             //Commit the change to the database
             c.commit()
@@ -49,14 +49,14 @@ class TiendaDAO (private val c: Connection){
     }
 
     private fun createTable() {
-        println(CREATE_TABLE_TIENDAS_SQL)
+        println(CREATE_TABLE_TIENDA_SQL)
         // try-with-resource statement will auto close the connection.
         try {
             //Get and instance of statement from the connection and use
             //the execute() method to execute the sql
             c.createStatement().use { st ->
                 //SQL statement to create a table
-                st.execute(CREATE_TABLE_TIENDAS_SQL)
+                st.execute(CREATE_TABLE_TIENDA_SQL)
             }
             //Commit the change to the database
             c.commit()
@@ -81,13 +81,13 @@ class TiendaDAO (private val c: Connection){
      * @param user
      */
     fun insert(user: Tienda) {
-        println(INSERT_TIENDAS_SQL)
+        println(INSERT_TIENDA_SQL)
         // try-with-resource statement will auto close the connection.
         try {
-            c.prepareStatement(INSERT_TIENDAS_SQL).use { st ->
-                st.setInt(1, user.id_tienda)
-                st.setString(2, user.nombre_tienda)
-                st.setString(3, user.direccion_tienda)
+            c.prepareStatement(INSERT_TIENDA_SQL).use { st ->
+                st.setInt(1, user.id)
+                st.setString(2, user.nombre)
+                st.setString(3, user.direccion)
 
                 st.executeUpdate()
             }
@@ -103,7 +103,7 @@ class TiendaDAO (private val c: Connection){
         // Step 1: Preparamos la Statement, asignado los valores a los indices
         //          en función de las ? que existen en la plantilla
         try {
-            c.prepareStatement(SELECT_TIENDAS_BY_ID).use { st ->
+            c.prepareStatement(SELECT_TIENDA_BY_ID).use { st ->
                 st.setInt(1, id)
                 println(st)
                 // Step 3: Ejecuta la Statement
@@ -113,9 +113,9 @@ class TiendaDAO (private val c: Connection){
                 //          En este caso, si hay valores, tendrá un unico valor, puesto
                 //          que estamos buscando por el ID, que es la clave primaria.
                 while (rs.next()) {
-                    val id = rs.getInt("id_tienda")
-                    val name = rs.getString("nombre_tienda")
-                    val email = rs.getString("direccion_tienda")
+                    val id = rs.getInt("id")
+                    val name = rs.getString("nombre")
+                    val email = rs.getString("direccion")
                     user = Tienda(id, name, email)
                 }
             }
@@ -132,16 +132,16 @@ class TiendaDAO (private val c: Connection){
         val users: MutableList<Tienda> = ArrayList()
         // Step 1: Establishing a Connection
         try {
-            c.prepareStatement(SELECT_ALL_TIENDAS).use { st ->
+            c.prepareStatement(SELECT_ALL_TIENDA).use { st ->
                 println(st)
                 // Step 3: Execute the query or update query
                 val rs = st.executeQuery()
 
                 // Step 4: Process the ResultSet object.
                 while (rs.next()) {
-                    val id = rs.getInt("id_tienda")
-                    val name = rs.getString("nombre_tienda")
-                    val email = rs.getString("direccion_tienda")
+                    val id = rs.getInt("id")
+                    val name = rs.getString("nombre")
+                    val email = rs.getString("direccion")
                     users.add(Tienda(id, name, email ))
                 }
             }
@@ -156,7 +156,7 @@ class TiendaDAO (private val c: Connection){
         var rowDeleted = false
 
         try {
-            c.prepareStatement(DELETE_TIENDAS_SQL).use { st ->
+            c.prepareStatement(DELETE_TIENDA_SQL).use { st ->
                 st.setInt(1, id)
                 rowDeleted = st.executeUpdate() > 0
             }
@@ -172,10 +172,10 @@ class TiendaDAO (private val c: Connection){
         var rowUpdated = false
 
         try {
-            c.prepareStatement(UPDATE_TIENDAS_SQL).use { st ->
-                st.setInt(1, user.id_tienda)
-                st.setString(2, user.nombre_tienda)
-                st.setString(3, user.direccion_tienda)
+            c.prepareStatement(UPDATE_TIENDA_SQL).use { st ->
+                st.setInt(3, user.id)
+                st.setString(1, user.nombre)
+                st.setString(2, user.direccion)
                 rowUpdated = st.executeUpdate() > 0
             }
             //Commit the change to the database

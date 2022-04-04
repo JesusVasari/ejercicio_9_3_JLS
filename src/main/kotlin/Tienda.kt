@@ -1,4 +1,4 @@
 
-data class Tienda(val id_tienda: Int = -1, var nombre_tienda: String, var direccion_tienda: String)
+data class Tienda(val id: Int = -1, var nombre: String, var direccion: String)
 
 

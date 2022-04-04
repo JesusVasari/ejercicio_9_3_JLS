@@ -21,36 +21,36 @@ fun main() {
             // Los objetos MyUser, tambien llamados entidades, se llaman
             // Objetos TO (Transfer Object) porque son objetos que transfieren datos.
             // desde la base de datos hasta las capas de logica de negocio y presentación.
-            val h2DAO = it?.let { it1 -> TiendaDAO(it1) }
+            val h2DAO = TiendaDAO(c.connection!!)
 
             // Creamos la tabla o la vaciamos si ya existe
-            h2DAO?.prepareTable()
+            h2DAO.prepareTable()
 
             // Insertamos 4 usuarios
-            repeat(4)
+            repeat(1)
             {
-                h2DAO?.insert(Tienda(id_tienda = 1, nombre_tienda = "La Nena", direccion_tienda = "Callejon de la Nena"))
-                h2DAO?.insert(Tienda(id_tienda = 2, nombre_tienda = "La Virgen", direccion_tienda = "Calle Rosa de Guadalupe"))
-                h2DAO?.insert(Tienda(id_tienda = 3, nombre_tienda = "La Piscina", direccion_tienda = "Avenida De los Charcos"))
-                h2DAO?.insert(Tienda(id_tienda = 4, nombre_tienda = "El churro", direccion_tienda = "Calle del Pason"))
-                h2DAO?.insert(Tienda(id_tienda = 5, nombre_tienda = "Don Pancho", direccion_tienda = "Avenida del Reboso"))
+                h2DAO.insert(Tienda(id = 1, nombre = "La Nena", direccion = "Callejon de la Nena"))
+                h2DAO.insert(Tienda(id = 2, nombre = "La Virgen", direccion = "Calle Rosa de Guadalupe"))
+                h2DAO.insert(Tienda(id = 3, nombre = "La Piscina", direccion = "Avenida De los Charcos"))
+                h2DAO.insert(Tienda(id = 4, nombre = "El churro", direccion = "Calle del Pason"))
+                h2DAO.insert(Tienda(id = 5, nombre = "Don Pancho", direccion = "Avenida del Reboso"))
 
 
             }  // Buscar un usuario
-            val u = h2DAO?.selectById(1)
+            val u = h2DAO.selectById(1)
 
             // Si ha conseguido el usuario, por tanto no es nulo, entonces
             // actualizar el usuario
             if (u!=null)
             {
-                u.nombre_tienda = "Nuevo usuario"
+                u.nombre = "Nuevo usuario"
                 h2DAO.update(u)
             }
             // Borrar un usuario
-            h2DAO?.deleteById(2)
+            h2DAO.deleteById(2)
 
             // Seleccionar todos los usuarios
-            println(h2DAO?.selectAll())
+            println(h2DAO.selectAll())
         }
     } else
         println("Conexión ERROR")

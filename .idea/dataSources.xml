@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
     <data-source source="LOCAL" name="@localhost" uuid="651a3e0a-9be6-4ba9-b665-c18c564a26fb">
-      <driver-ref>oracle.19</driver-ref>
+      <driver-ref>oracle</driver-ref>
       <synchronize>true</synchronize>
       <auto-commit>false</auto-commit>
       <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
