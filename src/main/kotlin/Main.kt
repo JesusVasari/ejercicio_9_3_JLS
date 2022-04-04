@@ -2,7 +2,7 @@ fun main() {
     val c = ConnectionBuilder()
     println("conectando.....")
 
-     if (c.connection?.isValid(10)!!) {
+    if (c.connection?.isValid(10)!!) {
         println("Conexión válida")
 
         // Deshabilito el autoCommit. Si no, tengo que quitar los commit()
@@ -23,6 +23,8 @@ fun main() {
             // desde la base de datos hasta las capas de logica de negocio y presentación.
             val h2DAO = TiendaDAO(c.connection!!)
 
+            val h2DAA = ArticuloDAO(c.connection!!)
+
             // Creamos la tabla o la vaciamos si ya existe
             h2DAO.prepareTable()
 
@@ -35,14 +37,19 @@ fun main() {
                 h2DAO.insert(Tienda(id = 4, nombre = "El churro", direccion = "Calle del Pason"))
                 h2DAO.insert(Tienda(id = 5, nombre = "Don Pancho", direccion = "Avenida del Reboso"))
 
+                h2DAA.insert(Articulos(1,"CD-DVD","900 MB", 35.95))
+                h2DAA.insert(Articulos(2,"USB","32 GB",155.90))
+                h2DAA.insert(Articulos(3,"Laptop SONY","4 GB RAM, 300 HDD",13410.70))
+                h2DAA.insert(Articulos(4,"Mouse óptico","700 DPI",104.40))
+                h2DAA.insert(Articulos(5,"Disco Duro","200 TB",2300.00))
+                h2DAA.insert(Articulos(6,"Proyector HSB","Toshiba",5500.00))
 
             }  // Buscar un usuario
             val u = h2DAO.selectById(1)
 
             // Si ha conseguido el usuario, por tanto no es nulo, entonces
             // actualizar el usuario
-            if (u!=null)
-            {
+            if (u != null) {
                 u.nombre = "Nuevo usuario"
                 h2DAO.update(u)
             }
