@@ -14,7 +14,7 @@ class ArticuloDAO (private val c: Connection){
         private const val TABLE = "ARTICULOS"
         private const val TRUNCATE_TABLE_ARTICULOS_SQL = "TRUNCATE TABLE ARTICULOS"
         private const val CREATE_TABLE_ARTICULOS_SQL =
-            "CREATE TABLE ARTICULOS (id  number(10,0) NOT NULL , nombre varchar(50) NOT NULL, comentarios varchar(200) NOT NULL,precio NUMBER(10,2)  CHECK(precio>0),PRIMARY KEY (id)),ID NUMBER(10,0) CONSTRAINT FK_ID_TIENDA REFERENCES TIENDAS(ID) )"
+            "CREATE TABLE ARTICULOS (id  numeric (1) NOT NULL , nombre varchar(200) NOT NULL, comentarios varchar(200) NOT NULL,precio numeric (10)  CHECK(precio>0),PRIMARY KEY (id) )"
         private const val INSERT_ARTICULOS_SQL = "INSERT INTO ARTICULOS (id,nombre, comentarios,precio) VALUES  (?, ?, ?, ?)"
         private const val SELECT_ARTICULOS_BY_ID = "select id,nombre from ARTICULOS where id =?"
 
@@ -85,7 +85,7 @@ class ArticuloDAO (private val c: Connection){
                 st.setInt(1, user.id_articulo)
                 st.setString(2, user.nombre)
                 st.setString(3, user.comentario)
-                st.setDouble(4, user.precio)
+                st.setInt(4, user.precio)
 
                 st.executeUpdate()
             }
@@ -113,7 +113,7 @@ class ArticuloDAO (private val c: Connection){
                     val id = rs.getInt("id")
                     val name = rs.getString("nombre")
                     val email = rs.getString("comentario")
-                    val precio = rs.getDouble("precio")
+                    val precio = rs.getInt("precio")
                     user = Articulos(id, name, email,precio)
                 }
             }
